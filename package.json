@@ -9,7 +9,7 @@
   "name": "GithubFetchService",
   "version": "1.0.0",
   "description": "fetch git user contecnt and monitoir",
-  "main": "index.js",
+  "main": "index.ts",
   "repository": "https://github.com/CaesarBourne/GithubFetchService.git",
   "author": "“CaesarBourne” <“caesaradek@gmail.com”>",
   "license": "MIT",
