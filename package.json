@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.1.0",
+    "axios": "^1.7.3",
+    "sqlite3": "^5.1.7",
+    "ts-jest": "^29.2.4",
+    "ts-node": "^10.9.2",
+    "typeorm": "^0.3.20",
+    "typescript": "^5.5.4"
+  },
+  "name": "GithubFetchService",
+  "version": "1.0.0",
+  "description": "fetch git user contecnt and monitoir",
+  "main": "index.js",
+  "repository": "https://github.com/CaesarBourne/GithubFetchService.git",
+  "author": "“CaesarBourne” <“caesaradek@gmail.com”>",
+  "license": "MIT"
+}
