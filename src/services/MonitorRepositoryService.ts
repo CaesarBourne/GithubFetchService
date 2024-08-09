@@ -57,6 +57,18 @@ export const monitorRepositoryService = async (
   }
 };
 
+export const initiateMonitoring = (
+  repoOwner: string,
+  repo: string,
+  timeInterval: number,
+  startDate: string
+) => {
+  setInterval(
+    () => monitorRepositoryService(repoOwner, repo, timeInterval, startDate),
+    timeInterval
+  );
+};
+
 // name: name,
 // description: description,
 // language: language,
