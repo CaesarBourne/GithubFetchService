@@ -20,7 +20,7 @@ export class RepositoryEntity {
   html_url!: string;
 
   @Column("double")
-  starsCount!: number;
+  stargazers_count!: number;
 
   @Column("text")
   description!: string;
@@ -37,9 +37,9 @@ export class RepositoryEntity {
   @Column()
   language!: string;
 
-  @CreateDateColumn({ name: "created_at" })
+  @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ name: "updated_at" })
+  @UpdateDateColumn({ name: "updatedAt" })
   updatedAt!: Date;
 }

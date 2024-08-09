@@ -1,7 +1,7 @@
 import { AppDataSource } from "../database";
 import { CommitEntity } from "../entity/CommitEntity";
 import { RepositoryEntity } from "../entity/RepositoryEntity";
-import { getRepositoryInfo } from "./GithubService";
+import { getCommitsData, getRepositoryInfo } from "./GithubService";
 
 export const monitorRepositoryService = async (
   repoOwner: string,
@@ -18,14 +18,14 @@ export const monitorRepositoryService = async (
     html_url,
     language,
     forksCount,
-    starsCount,
+    stargazers_count,
     open_issues_count,
     watchers_count,
     created_at,
     updated_at,
   } = await getRepositoryInfo(repoOwner, repo);
-
-  let repositoryName = await gitRepositoryFromEntity.findOne({
+  const commitList = await getCommitsData(repoOwner, repo, startDate);
+  let repositoryName = await gitRepositoryFromEntity.findOneBy({
     name: name,
   });
   if (!repositoryName) {
@@ -37,8 +37,32 @@ export const monitorRepositoryService = async (
       html_url,
       open_issues_count,
       watchers_count,
-      created_at: new Date(created_at),
-      updated_at: new Date(updated_at),
+      createdAt: new Date(created_at),
+      updatedAt: new Date(updated_at),
+    });
+    await gitRepositoryFromEntity.save(repositoryName);
+  }
+
+  for (const commitObj of commitList) {
+    const commitInRepo = await commitRepositoryFromEntity.findOneBy({
+      html_url: commitObj.html_url,
+    });
+    const commit = commitRepositoryFromEntity.create({
+      html_url: commitObj.html_url,
+      date: new Date(commitObj?.commit?.author?.date),
+      message: commitObj.commit.message,
+      repository: repositoryName,
+      author: commitObj.commit.author.name,
     });
   }
 };
+
+// name: name,
+// description: description,
+// language: language,
+// forksCount: forksCount,
+// html_url: html_url,
+// open_issues_count: open_issues_count,
+// watchers_count: watchers_count,
+// created_at: new Date(created_at),
+// updated_at: new Date(updated_at),

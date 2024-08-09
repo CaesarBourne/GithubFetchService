@@ -16,7 +16,7 @@ export class CommitEntity {
   author!: string;
 
   @Column()
-  url!: string;
+  html_url!: string;
 
   @ManyToOne(() => RepositoryEntity, (repository) => repository.id)
   repository!: RepositoryEntity;
