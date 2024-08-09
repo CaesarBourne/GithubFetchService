@@ -10,7 +10,12 @@
     "typescript": "^5.5.4"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prestart": "ts-node src/database.ts",
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "prestart:prod": "npm run build && node dist/database.js",
+    "start:prod": "node dist/index.js"
   },
   "name": "GithubFetchService",
   "version": "1.0.0",

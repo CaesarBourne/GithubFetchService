@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { RepositoryEntity } from "./RepositoryEntity";
 
-@Entity()
+@Entity("commit_table")
 export class CommitEntity {
   @PrimaryGeneratedColumn()
   id!: number;
