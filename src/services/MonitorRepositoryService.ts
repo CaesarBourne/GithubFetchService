@@ -1,7 +1,7 @@
 import { AppDataSource } from "../database";
 import { CommitEntity } from "../entity/CommitEntity";
 import { RepositoryEntity } from "../entity/RepositoryEntity";
-import { getCommitsData, getRepositoryInfo } from "./GithubService";
+import { getCommitsData, getRepositoryData } from "./GithubService";
 
 export const gitRepositoryFromEntity =
   AppDataSource.getRepository(RepositoryEntity);
@@ -25,7 +25,7 @@ export const monitorRepositoryService = async (
     watchers_count,
     created_at,
     updated_at,
-  } = await getRepositoryInfo(repoOwner, repo);
+  } = await getRepositoryData(repoOwner, repo);
   const commitList = await getCommitsData(repoOwner, repo, startDate);
   let repositoryName = await gitRepositoryFromEntity.findOneBy({
     name: name,
