@@ -3,7 +3,7 @@ import { CommitEntity } from "../entity/CommitEntity";
 import { RepositoryEntity } from "../entity/RepositoryEntity";
 import { getCommitsData, getRepositoryData } from "./GithubService";
 
-export const gitRepositoryFromEntity =
+export const githubServiceRepository =
   AppDataSource.getRepository(RepositoryEntity);
 export const commitRepositoryFromEntity =
   AppDataSource.getRepository(CommitEntity);
@@ -27,11 +27,11 @@ export const monitorRepositoryService = async (
     updated_at,
   } = await getRepositoryData(repoOwner, repo);
   const commitList = await getCommitsData(repoOwner, repo, startDate);
-  let repositoryName = await gitRepositoryFromEntity.findOneBy({
+  let repositoryName = await githubServiceRepository.findOneBy({
     name: name,
   });
   if (!repositoryName) {
-    repositoryName = gitRepositoryFromEntity.create({
+    repositoryName = githubServiceRepository.create({
       name,
       description,
       language,
@@ -42,7 +42,7 @@ export const monitorRepositoryService = async (
       createdAt: new Date(created_at),
       updatedAt: new Date(updated_at),
     });
-    await gitRepositoryFromEntity.save(repositoryName);
+    await githubServiceRepository.save(repositoryName);
   }
 
   for (const commitObj of commitList) {
