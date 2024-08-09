@@ -18,3 +18,11 @@ initiateMonitoring("facebook", "react", 36000, "2024-01-01T00:00:00Z");
 //   .then(() => {
 //   })
 //   .catch((error) => console.log(error));
+export const connectDatabase = async () => {
+  try {
+    await AppDataSource.initialize();
+    console.log("Database connectivity Success  $$$$$$");
+  } catch (error) {
+    console.error("Error  on app data source ", error);
+  }
+};
