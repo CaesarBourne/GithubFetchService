@@ -17,7 +17,7 @@ export const getCommitsData = async (
   since?: string
 ) => {
   const commitResponse = await axios.get(
-    `${GITHUB_BASE_URL}/${owner}/${repository}/commiots`,
+    `${GITHUB_BASE_URL}/${owner}/${repository}/commits`,
     { params: { since } }
   );
   return commitResponse.data;

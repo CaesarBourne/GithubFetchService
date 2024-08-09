@@ -18,3 +18,9 @@ export const fetchCommitsByRepository = async (repoName: string) => {
     .where("repository.name = :repoName", { repoName })
     .getMany();
 };
+
+const topAuthors = fetchTopCommitAuthors(10);
+console.log("TOP COMMIT AUTHORS", topAuthors);
+
+const commitsLists = fetchCommitsByRepository("react");
+console.log("TOP COMMIs $$$$$", commitsLists);
