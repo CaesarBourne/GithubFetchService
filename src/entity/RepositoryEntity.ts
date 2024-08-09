@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-@Entity()
+@Entity("repository_table")
 export class RepositoryEntity {
   @PrimaryGeneratedColumn()
   id!: number;
