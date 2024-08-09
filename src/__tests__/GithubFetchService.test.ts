@@ -1,6 +1,7 @@
 // src/__tests__/GitHubService.test.ts
 import axios from "axios";
-import { getRepositoryInfo } from "../services/GithubService";
+import { getRepositoryData } from "../services/GithubService";
+import { CHROMIUM_OWNER, CHROMIUM_REPO } from "../lib/constant";
 
 jest.mock("axios");
 
@@ -25,14 +26,14 @@ describe("GitHubService", () => {
     (axios.get as jest.Mock).mockResolvedValue({ data: repoData });
 
     // Call the function under test
-    const data = await getRepositoryInfo("facebook", "react");
+    const data = await getRepositoryData(CHROMIUM_OWNER, CHROMIUM_REPO);
 
     // Verify that the data returned by fetchRepositoryData matches the mock data
     expect(data).toEqual({
-      name: "react",
+      name: CHROMIUM_OWNER,
       description:
         "A declarative, efficient, and flexible JavaScript library for building user interfaces.",
-      url: "https://github.com/facebook/react",
+      url: "https://github.com/chromium/chromium",
       language: "JavaScript",
       forksCount: 30000,
       starsCount: 150000,
