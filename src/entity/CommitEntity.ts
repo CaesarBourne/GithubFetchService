@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Repository } from "./Repository";
+import { RepositoryEntity } from "./RepositoryEntity";
 
 @Entity()
 export class CommitEntity {
@@ -18,6 +18,6 @@ export class CommitEntity {
   @Column()
   url!: string;
 
-  @ManyToOne(() => Repository, (repository) => repository.id)
-  repository!: Repository;
+  @ManyToOne(() => RepositoryEntity, (repository) => repository.id)
+  repository!: RepositoryEntity;
 }
