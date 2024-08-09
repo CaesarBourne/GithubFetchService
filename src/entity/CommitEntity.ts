@@ -7,6 +7,9 @@ export class CommitEntity {
   id!: number;
 
   @Column()
+  repositoryId!: number;
+
+  @Column()
   message!: string;
 
   @Column()
