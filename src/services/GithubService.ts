@@ -38,8 +38,11 @@ export const getCommitsData = async (
   return commitResponse.data;
 };
 
-async function seedDatabaseWithRepository() {
+export async function seedDatabaseWithRepository() {
   const repositoryData = await getRepositoryData();
+
+  //   console.log("^^^^^^^^^^ repo LIST FRO DATABASE ", repositoryData);
+
   const repositoryEntity = new RepositoryEntity();
   repositoryEntity.name = repositoryData.name;
   repositoryEntity.description = repositoryData.description;
@@ -53,23 +56,27 @@ async function seedDatabaseWithRepository() {
   repositoryEntity.updatedAt = new Date(repositoryData.updated_at);
 
   await githubServiceRepository.save(repositoryEntity);
+  try {
+    //commits data fetch and save to database
+    const commitsData = await getCommitsData();
+    // console.log("@@@@@@@ COMMIT LIST FRO DATABASE ", commitsData);
 
-  //commits data fetch and save to database
-  const commitsData = await getCommitsData();
-  //   console.log("@@@@ COMMIT LIST FRO DATABASE " );
-
-  const commitEntity = new CommitEntity();
-  const commitlist = commitsData.map((commitObject: any) => {
-    commitEntity.repositoryId = repositoryEntity.id;
-    commitEntity.message = commitsData.commit.message;
-    commitEntity.author = commitsData.commit.author.name;
-    commitEntity.date = new Date(commitsData.commit.author.date);
-    commitEntity.html_url = commitsData.html_url;
-    return commitEntity;
-  });
-  await commitRepositoryFromEntity.save(commitlist);
-  console.log("seeded the database with data from chromium");
+    const commitEntity = new CommitEntity();
+    const commitlist = commitsData.map((commitObject: any) => {
+      commitEntity.repositoryId = repositoryEntity.id;
+      commitEntity.message = commitsData.commit.message;
+      commitEntity.author = commitsData.commit.author.name;
+      commitEntity.date = new Date(commitsData.commit.author.date);
+      commitEntity.html_url = commitsData.html_url;
+      return commitEntity;
+    });
+    await commitRepositoryFromEntity.save(commitlist);
+    console.log("seeded the database with data from chromium");
+  } catch (error) {
+    console.error("Failed to seed the database with repository data:", error);
+    throw error; //
+  }
 }
-seedDatabaseWithRepository().catch((error) =>
-  console.error("error seeding database ", error)
-);
+// seedDatabaseWithRepository().catch((error) =>
+//   console.error("error seeding database ", error)
+// );
