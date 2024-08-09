@@ -1,24 +1,35 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class RepositoryEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({
+    length: 100,
+  })
   name!: string;
 
   @Column()
-  url!: string;
+  html_url!: string;
 
-  @Column()
+  @Column("double")
   starsCount!: number;
 
-  @Column()
+  @Column("text")
   description!: string;
 
   @Column()
-  openIssuesCount!: number;
+  open_issues_count!: number;
+
+  @Column()
+  watchers_count!: number;
 
   @Column()
   forksCount!: number;
@@ -26,9 +37,9 @@ export class RepositoryEntity {
   @Column()
   language!: string;
 
-  @Column()
+  @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;
 
-  @Column()
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt!: Date;
 }

@@ -1,9 +1,12 @@
 import axios from "axios";
 import { GITHUB_BASE_URL } from "../lib/constant";
 
-export const getRepositoryInfo = async (owner: string, repository: string) => {
+export const getRepositoryInfo = async (
+  repoOwner: string,
+  repository: string
+) => {
   const repoResponse = await axios.get(
-    `${GITHUB_BASE_URL}/${owner}/${repository}`
+    `${GITHUB_BASE_URL}/${repoOwner}/${repository}`
   );
   return repoResponse.data;
 };
