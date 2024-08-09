@@ -2,27 +2,34 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { RepositoryEntity } from "./entity/RepositoryEntity";
 import { CommitEntity } from "./entity/CommitEntity";
-import { initiateMonitoring } from "./services/MonitorRepositoryService";
+// import { initiateMonitoring } from "./services/MonitorRepositoryService";
+import * as fs from "fs";
+import * as path from "path";
 
+const dbFilePath = path.resolve(__dirname, "database.sqlite");
 export const AppDataSource = new DataSource({
   type: "sqlite",
-  database: "database.sqlite",
+  database: dbFilePath,
   entities: [RepositoryEntity, CommitEntity],
   synchronize: true,
-  // logging : false,
+  logging: true,
+  migrations: [],
+  subscribers: [],
 });
 
-initiateMonitoring("facebook", "react", 36000, "2024-01-01T00:00:00Z");
+export const initializeDatabase = async () => {
+  if (fs.existsSync(dbFilePath)) {
+    console.log("Database already exists. Skipping creation.");
+    return;
+  }
 
-// AppDataSource.initialize()
-//   .then(() => {
-//   })
-//   .catch((error) => console.log(error));
-export const connectDatabase = async () => {
+  console.log("Database does not exist. Creating now...");
+
   try {
     await AppDataSource.initialize();
-    console.log("Database connectivity Success  $$$$$$");
+    console.log("Database created and connected successfully.");
   } catch (error) {
-    console.error("Error  on app data source ", error);
+    console.error("Failed to initialize database:", error);
   }
 };
+initializeDatabase();
