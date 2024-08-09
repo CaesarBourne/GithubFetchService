@@ -32,4 +32,3 @@ export const initializeDatabase = async () => {
     console.error("Failed to initialize database:", error);
   }
 };
-initializeDatabase();

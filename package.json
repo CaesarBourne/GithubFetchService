@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "jest",
-    "prestart": "ts-node src/database.ts",
+    "prestart": "ts-node src/init-db.ts",
     "start": "ts-node src/index.ts",
     "build": "tsc",
     "prestart:prod": "npm run build && node dist/database.js",

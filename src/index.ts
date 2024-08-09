@@ -4,7 +4,6 @@ import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import monitorRepository from "./routes/monitorRepository";
 import queryRepository from "./routes/queryRepository";
-import { initializeDatabase } from "./database";
 
 import { port } from "./lib/constant";
 
