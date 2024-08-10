@@ -19,7 +19,6 @@ export const getRepositoryData = async (
   const repoResponse = await axios.get(
     `${GITHUB_BASE_URL}/${repoOwner}/${repository}`
   );
-  //   const repoResponse = await axios.get(GITHUB_API_URL);
   return repoResponse.data;
 };
 
@@ -34,14 +33,19 @@ export const getCommitsData = async (
       params: { since },
     }
   );
-  cdrlogger.info(JSON.stringify(commitResponse.data));
+  console.log("LENGTH OF DATA ############## ", commitResponse.data.length);
+  console.log("LENGTH OF DATA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ", since);
+
+  cdrlogger.info(
+    commitResponse.data.length + "\n" + JSON.stringify(commitResponse.data)
+  );
   return commitResponse.data;
 };
 
 export async function seedDatabaseWithRepository() {
   const repositoryData = await getRepositoryData();
 
-  console.log("^^^^^^^^^^ repo LIST FRO DATABASE ", repositoryData);
+  //   console.debug("^^^^^^^^^^ repo LIST FRO DATABASE ", repositoryData);
 
   const repositoryEntity = new RepositoryEntity();
   repositoryEntity.name = repositoryData.name;
@@ -54,6 +58,7 @@ export async function seedDatabaseWithRepository() {
   repositoryEntity.watchersCount = repositoryData.watchers_count;
   repositoryEntity.createdAt = new Date(repositoryData.created_at);
   repositoryEntity.updatedAt = new Date(repositoryData.updated_at);
+  repositoryEntity.lastCommitSha = null;
 
   await githubServiceRepository.save(repositoryEntity);
   try {
