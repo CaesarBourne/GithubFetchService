@@ -1,5 +1,5 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+
+FROM node:20.11.1 as build
 
 # Set the working directory
 WORKDIR /app
@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
+RUN npm cache clean --force
 # Install dependencies
 RUN npm install
 
