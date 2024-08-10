@@ -11,4 +11,4 @@ services:
     environment:
       NODE_ENV: production
     command: >
-      sh -c "npm run initialize-db && npm run seed-db && npm run start:prod"
+      sh -c "npm run start:prod"
