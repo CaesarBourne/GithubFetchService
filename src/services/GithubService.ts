@@ -28,7 +28,7 @@ export const getCommitsDataFromGit = async (
   repoOwner: string = CHROMIUM_OWNER,
   repository: string = CHROMIUM_REPO,
   page: number,
-  lastSha: any,
+  lastSha: string | null,
   per_page: number = 100,
   since?: string
 ) => {
@@ -37,7 +37,7 @@ export const getCommitsDataFromGit = async (
     {
       params: {
         sha: lastSha, // Fetch commits after this SHA
-        per_page: 100, // GitHub's max per page
+        per_page, // GitHub's max per page
         page: page,
         since,
       },
@@ -105,8 +105,10 @@ export const fetchCommitsAndSaveInDB = async (
         latestSha
       );
       if (commitsData.length === 0) break;
-      const commitEntity = new CommitEntity();
+
+      //bulk saving of commit list less expensive
       const commitlist = commitsData.map((commitObject: any) => {
+        const commitEntity = new CommitEntity();
         commitEntity.repositoryId = repositoryName.id;
         commitEntity.message = commitObject.commit.message;
         commitEntity.author = commitObject.commit.author.name;
