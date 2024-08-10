@@ -38,8 +38,9 @@ export class RepositoryEntity {
 
   @Column()
   language!: string;
+
   @Column({ nullable: true })
-  lastCommitSha!: string | null;
+  lastCommitSha?: string;
 
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;
