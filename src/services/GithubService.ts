@@ -12,6 +12,8 @@ import { RepositoryEntity } from "../entity/RepositoryEntity";
 import { CommitEntity } from "../entity/CommitEntity";
 import cdrlogger from "../lib/logFormat";
 
+// export class GitHubService{}
+
 export const getRepositoryData = async (
   repoOwner: string = CHROMIUM_OWNER,
   repository: string = CHROMIUM_REPO
@@ -22,19 +24,25 @@ export const getRepositoryData = async (
   return repoResponse.data;
 };
 
-export const getCommitsData = async (
+export const getCommitsDataFromGit = async (
   repoOwner: string = CHROMIUM_OWNER,
   repository: string = CHROMIUM_REPO,
+  page: number,
+  lastSha: any,
+  per_page: number = 100,
   since?: string
 ) => {
   const commitResponse = await axios.get(
     `${GITHUB_BASE_URL}/${repoOwner}/${repository}/commits`,
     {
-      params: { since },
+      params: {
+        sha: lastSha, // Fetch commits after this SHA
+        per_page: 100, // GitHub's max per page
+        page: page,
+        since,
+      },
     }
   );
-  console.log("LENGTH OF DATA ############## ", commitResponse.data.length);
-  console.log("LENGTH OF DATA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ", since);
 
   cdrlogger.info(
     commitResponse.data.length + "\n" + JSON.stringify(commitResponse.data)
@@ -42,46 +50,96 @@ export const getCommitsData = async (
   return commitResponse.data;
 };
 
-export async function seedDatabaseWithRepository() {
-  const repositoryData = await getRepositoryData();
-
-  //   console.debug("^^^^^^^^^^ repo LIST FRO DATABASE ", repositoryData);
-
-  const repositoryEntity = new RepositoryEntity();
-  repositoryEntity.name = repositoryData.name;
-  repositoryEntity.description = repositoryData.description;
-  repositoryEntity.url = repositoryData.html_url;
-  repositoryEntity.language = repositoryData.language;
-  repositoryEntity.forksCount = repositoryData.forks_count;
-  repositoryEntity.starsCount = repositoryData.stargazers_count;
-  repositoryEntity.openIssuesCount = repositoryData.open_issues_count;
-  repositoryEntity.watchersCount = repositoryData.watchers_count;
-  repositoryEntity.createdAt = new Date(repositoryData.created_at);
-  repositoryEntity.updatedAt = new Date(repositoryData.updated_at);
-  repositoryEntity.lastCommitSha = null;
-
-  await githubServiceRepository.save(repositoryEntity);
+export const fetchRepoDetailsAndSaveInDb = async (
+  repoOwner: string = CHROMIUM_OWNER,
+  repoName: string = CHROMIUM_REPO
+) => {
   try {
-    //commits data fetch and save to database
-    const commitsData = await getCommitsData();
-    // console.log("@@@@@@@ COMMIT LIST FRO DATABASE ", commitsData);
+    const repositoryData = await getRepositoryData(repoOwner, repoName);
 
-    const commitEntity = new CommitEntity();
-    const commitlist = commitsData.map((commitObject: any) => {
-      commitEntity.repositoryId = repositoryEntity.id;
-      commitEntity.message = commitObject.commit.message;
-      commitEntity.author = commitObject.commit.author.name;
-      commitEntity.date = new Date(commitObject.commit.author.date);
-      commitEntity.url = commitObject.html_url;
-      return commitEntity;
-    });
-    await commitRepositoryFromEntity.save(commitlist);
-    console.log("seeded the database with data from chromium");
+    const repositoryEntity = new RepositoryEntity();
+
+    repositoryEntity.name = repositoryData.name;
+    repositoryEntity.description = repositoryData.description;
+    repositoryEntity.url = repositoryData.html_url;
+    repositoryEntity.language = repositoryData.language;
+    repositoryEntity.forksCount = repositoryData.forks_count;
+    repositoryEntity.starsCount = repositoryData.stargazers_count;
+    repositoryEntity.openIssuesCount = repositoryData.open_issues_count;
+    repositoryEntity.watchersCount = repositoryData.watchers_count;
+    repositoryEntity.createdAt = new Date(repositoryData.created_at);
+    repositoryEntity.updatedAt = new Date(repositoryData.updated_at);
+    repositoryEntity.lastCommitSha = undefined;
+
+    const savedResponse = await githubServiceRepository.save(repositoryEntity);
+
+    console.debug("&&&&&&&&& saved  ", savedResponse);
+    return savedResponse;
   } catch (error) {
-    console.error("Failed to seed the database with repository data:", error);
+    console.error("Failed to seed the database with commits data:", error);
     throw error; //
   }
+};
+
+export const fetchCommitsAndSaveInDB = async (
+  repoOwner: string = CHROMIUM_OWNER,
+  repoName: string = CHROMIUM_REPO
+) => {
+  try {
+    const repositoryName = await githubServiceRepository.findOneBy({
+      name: repoName,
+    });
+
+    if (!repositoryName) {
+      throw new Error(`Repository with name ${repoName} not found.`);
+    }
+
+    let page = 1;
+    let latestSha: string | null = null;
+    while (true) {
+      //commits data fetch  from gitHub to database
+      const commitsData = await getCommitsDataFromGit(
+        repoOwner,
+        repoName,
+        page,
+        latestSha
+      );
+      if (commitsData.length === 0) break;
+      const commitEntity = new CommitEntity();
+      const commitlist = commitsData.map((commitObject: any) => {
+        commitEntity.repositoryId = repositoryName.id;
+        commitEntity.message = commitObject.commit.message;
+        commitEntity.author = commitObject.commit.author.name;
+        commitEntity.date = new Date(commitObject.commit.author.date);
+        commitEntity.url = commitObject.html_url;
+        return commitEntity;
+      });
+      await commitRepositoryFromEntity.save(commitlist);
+      if (!latestSha) {
+        latestSha = commitsData.sha;
+      }
+      page++;
+    }
+
+    // console.log("@@@@@@@ COMMIT LIST FRO DATABASE ", commitsData);
+    //last commit sha saved for reference
+    if (latestSha) {
+      repositoryName.lastCommitSha = latestSha;
+      await githubServiceRepository.save(repositoryName);
+    }
+
+    console.log("seeded the database with data from commits");
+  } catch (error) {
+    console.error("Failed to seed the database with commits data:", error);
+    throw error; //
+  }
+};
+
+export async function seedDatabaseWithRepository(
+  repoOwner?: string,
+  repoName?: string
+) {
+  await fetchRepoDetailsAndSaveInDb(repoName);
+
+  await fetchCommitsAndSaveInDB(repoName);
 }
-// seedDatabaseWithRepository().catch((error) =>
-//   console.error("error seeding database ", error)
-// );
