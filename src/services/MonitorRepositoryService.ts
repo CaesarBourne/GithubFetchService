@@ -36,9 +36,10 @@ export const monitorRepositoryService = async (
       description,
       language,
       forksCount,
-      html_url,
-      open_issues_count,
-      watchers_count,
+      url: html_url,
+      starsCount: stargazers_count,
+      openIssuesCount: open_issues_count,
+      watchersCount: watchers_count,
       createdAt: new Date(created_at),
       updatedAt: new Date(updated_at),
     });
@@ -47,10 +48,10 @@ export const monitorRepositoryService = async (
 
   for (const commitObj of commitList) {
     const commitInRepo = await commitRepositoryFromEntity.findOneBy({
-      html_url: commitObj.html_url,
+      url: commitObj.html_url,
     });
     const commit = commitRepositoryFromEntity.create({
-      html_url: commitObj.html_url,
+      url: commitObj.html_url,
       date: new Date(commitObj?.commit?.author?.date),
       message: commitObj.commit.message,
       repository: repositoryName,

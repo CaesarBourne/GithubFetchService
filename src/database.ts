@@ -9,7 +9,8 @@ import * as path from "path";
 const dbFilePath = path.resolve(__dirname, "database.sqlite");
 export const AppDataSource = new DataSource({
   type: "sqlite",
-  database: dbFilePath,
+  //   database: dbFilePath,
+  database: "database.sqlite",
   entities: [RepositoryEntity, CommitEntity],
   synchronize: true,
   logging: true,
