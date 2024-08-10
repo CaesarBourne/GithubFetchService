@@ -10,6 +10,7 @@ import {
 } from "./MonitorRepositoryService";
 import { RepositoryEntity } from "../entity/RepositoryEntity";
 import { CommitEntity } from "../entity/CommitEntity";
+import cdrlogger from "../lib/logFormat";
 
 export const getRepositoryData = async (
   repoOwner: string = CHROMIUM_OWNER,
@@ -33,7 +34,7 @@ export const getCommitsData = async (
       params: { since },
     }
   );
-
+  cdrlogger.info(JSON.stringify(commitResponse.data));
   return commitResponse.data;
 };
 
