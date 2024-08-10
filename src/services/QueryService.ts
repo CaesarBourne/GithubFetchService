@@ -19,8 +19,8 @@ export const fetchCommitsByRepository = async (repoName: string) => {
     .getMany();
 };
 
-const topAuthors = fetchTopCommitAuthors(10);
-console.log("TOP COMMIT AUTHORS", topAuthors);
+// const topAuthors = fetchTopCommitAuthors(10);
+// console.log("TOP COMMIT AUTHORS", topAuthors);
 
-const commitsLists = fetchCommitsByRepository("react");
-console.log("TOP COMMIs $$$$$", commitsLists);
+// const commitsLists = fetchCommitsByRepository("chromium");
+// console.log("TOP COMMIs $$$$$", commitsLists);
