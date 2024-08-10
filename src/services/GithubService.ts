@@ -2,7 +2,6 @@ import axios from "axios";
 import {
   CHROMIUM_OWNER,
   CHROMIUM_REPO,
-  GITHUB_API_URL,
   GITHUB_BASE_URL,
 } from "../lib/constant";
 import {
@@ -41,17 +40,17 @@ export const getCommitsData = async (
 export async function seedDatabaseWithRepository() {
   const repositoryData = await getRepositoryData();
 
-  //   console.log("^^^^^^^^^^ repo LIST FRO DATABASE ", repositoryData);
+  console.log("^^^^^^^^^^ repo LIST FRO DATABASE ", repositoryData);
 
   const repositoryEntity = new RepositoryEntity();
   repositoryEntity.name = repositoryData.name;
   repositoryEntity.description = repositoryData.description;
-  repositoryEntity.html_url = repositoryData.html_url;
+  repositoryEntity.url = repositoryData.html_url;
   repositoryEntity.language = repositoryData.language;
   repositoryEntity.forksCount = repositoryData.forks_count;
-  repositoryEntity.stargazers_count = repositoryData.stargazers_count;
-  repositoryEntity.open_issues_count = repositoryData.open_issues_count;
-  repositoryEntity.watchers_count = repositoryData.watchers_count;
+  repositoryEntity.starsCount = repositoryData.stargazers_count;
+  repositoryEntity.openIssuesCount = repositoryData.open_issues_count;
+  repositoryEntity.watchersCount = repositoryData.watchers_count;
   repositoryEntity.createdAt = new Date(repositoryData.created_at);
   repositoryEntity.updatedAt = new Date(repositoryData.updated_at);
 
@@ -64,10 +63,10 @@ export async function seedDatabaseWithRepository() {
     const commitEntity = new CommitEntity();
     const commitlist = commitsData.map((commitObject: any) => {
       commitEntity.repositoryId = repositoryEntity.id;
-      commitEntity.message = commitsData.commit.message;
-      commitEntity.author = commitsData.commit.author.name;
-      commitEntity.date = new Date(commitsData.commit.author.date);
-      commitEntity.html_url = commitsData.html_url;
+      commitEntity.message = commitObject.commit.message;
+      commitEntity.author = commitObject.commit.author.name;
+      commitEntity.date = new Date(commitObject.commit.author.date);
+      commitEntity.url = commitObject.html_url;
       return commitEntity;
     });
     await commitRepositoryFromEntity.save(commitlist);

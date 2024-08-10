@@ -17,19 +17,19 @@ export class RepositoryEntity {
   name!: string;
 
   @Column()
-  html_url!: string;
+  url!: string;
 
   @Column("double")
-  stargazers_count!: number;
+  starsCount!: number;
 
   @Column("text")
   description!: string;
 
   @Column()
-  open_issues_count!: number;
+  openIssuesCount!: number;
 
   @Column()
-  watchers_count!: number;
+  watchersCount!: number;
 
   @Column()
   forksCount!: number;

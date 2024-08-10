@@ -22,7 +22,7 @@ export async function initAndSeedDatabase() {
     console.log("Database seeded with repository data successfully.");
   } catch (error) {
     // Handle and log any errors during initialization or seeding
-    console.error("Error during database initialization or seeding:", error);
+    console.error("Error during database seeding:", error);
 
     // Exit the process with a non-zero exit code to indicate failure
     process.exit(1);
