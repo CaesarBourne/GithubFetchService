@@ -26,7 +26,13 @@ export const monitorRepositoryService = async (
     created_at,
     updated_at,
   } = await getRepositoryData(repoOwner, repo);
-  const commitList = await getCommitsDataFromGit(repoOwner, repo, startDate);
+  const commitList = await getCommitsDataFromGit(
+    repoOwner,
+    repo,
+    12,
+    null,
+    100
+  );
   let repositoryName = await githubServiceRepository.findOneBy({
     name: name,
   });
