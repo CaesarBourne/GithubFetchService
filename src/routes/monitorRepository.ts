@@ -7,7 +7,7 @@ import moment from "moment";
 
 const router = Router();
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/start-monitor", async (req: Request, res: Response) => {
   const { owner, repository, startDate } = req.body;
 
   if (!owner || !repository || !startDate) {
@@ -27,7 +27,9 @@ router.post("/", async (req: Request, res: Response) => {
 
   try {
     await initiateMonitoring(owner, repository, startDate);
-    res.status(200).send("Monitoring started for repositorysitory.");
+    res
+      .status(200)
+      .send({ status: 1, message: "Monitoring started for repositorysitory." });
   } catch (error) {
     console.error("Error starting monitoring service:", error);
     res.status(500).send("Error starting monitoring service.");

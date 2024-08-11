@@ -125,7 +125,7 @@ export const fetchCommitsAndSaveInDB = async (
     //not  fetch too many page at once
     // const pageCompare = repositoryName.lastPageNumber ?? 1;
 
-    const rateLimit = 30;
+    const rateLimit = 50;
 
     while (page < rateLimit) {
       //commits data fetch  from gitHub to database
