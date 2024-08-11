@@ -14,7 +14,9 @@ const myFormat = printf(({ message, label }) => {
 const transport = new transports.DailyRotateFile({
   filename: path.join(
     __dirname,
-    `../logs/recharge_${utilities.nodeName}-%DATE%.csv`
+
+    `../logs/gitlog_${utilities.nodeName}-%DATE%.csv`
+
   ),
   datePattern: "YYYYMMDD_HH",
   zippedArchive: false,
