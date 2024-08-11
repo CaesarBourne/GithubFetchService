@@ -11,6 +11,7 @@ export const AppDataSource = new DataSource({
   type: "sqlite",
   database: dbFilePath,
   //   database: "database.sqlite",
+
   entities: [RepositoryEntity, CommitEntity],
   synchronize: true,
   logging: true,

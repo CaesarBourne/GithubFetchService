@@ -45,6 +45,7 @@ export const getCommitsDataFromGit = async (
         page: page,
         since,
       },
+
       headers: {
         Authorization: `Bearer ${GIT_TOKEN}`,
       },
@@ -133,6 +134,7 @@ export const fetchCommitsAndSaveInDB = async (
         return commitEntity;
       });
       await commitRepositoryFromEntity.save(commitlist);
+
       //   if (!latestSha) {
       //     latestSha = commitsData.sha;
       //   }

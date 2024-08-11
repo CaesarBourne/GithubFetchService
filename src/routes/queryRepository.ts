@@ -14,7 +14,7 @@ router.get("/top-authors", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("!!!!!! error  for top authors data ", error);
     res.status(500).send("Error retrieving top authors." + error);
-  }
+
 });
 
 // Route to get commits by repository name
