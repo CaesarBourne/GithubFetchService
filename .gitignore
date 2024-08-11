@@ -43,6 +43,7 @@ decryptbaba.ts
 .env.production.local
 .env.local
 
+database.sqlite
 # temp directory
 .temp
 .tmp
