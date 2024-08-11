@@ -125,7 +125,7 @@ export const fetchCommitsAndSaveInDB = async (
     //not  fetch too many page at once
     // const pageCompare = repositoryName.lastPageNumber ?? 1;
 
-    const rateLimit = 300;
+    const rateLimit = 30;
 
     while (page < rateLimit) {
       //commits data fetch  from gitHub to database
@@ -145,6 +145,7 @@ export const fetchCommitsAndSaveInDB = async (
         commitEntity.author = commitObject.commit.author.name;
         commitEntity.date = new Date(commitObject.commit.author.date);
         commitEntity.url = commitObject.html_url;
+        commitEntity.sha = commitObject.sha;
         return commitEntity;
       });
       await commitRepositoryFromEntity.save(commitlist);
