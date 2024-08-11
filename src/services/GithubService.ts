@@ -33,17 +33,26 @@ export const getCommitsDataFromGit = async (
   repoOwner: string = CHROMIUM_OWNER,
   repository: string = CHROMIUM_REPO,
   since: string,
-  latestSha: any
+  latestSha?: any
 ) => {
+  let paramsData;
+
+  if (latestSha) {
+    paramsData = {
+      sha: latestSha, // Fetch commits after this SHA
+      per_page: 100, // GitHub's max per page
+      since,
+    };
+  } else {
+    paramsData = {
+      per_page: 100,
+      since,
+    };
+  }
   const commitResponse = await axios.get(
     `${GITHUB_BASE_URL}/${repoOwner}/${repository}/commits`,
     {
-      params: {
-        sha: latestSha, // Fetch commits after this SHA
-        per_page: 100, // GitHub's max per page
-        // page: page,
-        since,
-      },
+      params: paramsData,
 
       headers: {
         Authorization: `Bearer ${GIT_TOKEN}`,
@@ -51,9 +60,6 @@ export const getCommitsDataFromGit = async (
     }
   );
 
-  //   cdrlogger.info(
-  //     commitResponse.data.length + "\n" + JSON.stringify(commitResponse.data)
-  //   );
   return commitResponse.data;
 };
 
@@ -116,9 +122,12 @@ export const fetchCommitsAndSaveInDB = async (
 
     let page = repositoryName.lastPageNumber ?? 1;
     let latestSha: string | null = null;
-    //dont  fetch too many page at once
-    const pageCompare = repositoryName.lastPageNumber ?? 1;
-    while (page < pageCompare + 3) {
+    //not  fetch too many page at once
+    // const pageCompare = repositoryName.lastPageNumber ?? 1;
+
+    const rateLimit = 300;
+
+    while (page < rateLimit) {
       //commits data fetch  from gitHub to database
       const commitsData = await getCommitsDataFromGit(
         repoOwner,
@@ -140,9 +149,6 @@ export const fetchCommitsAndSaveInDB = async (
       });
       await commitRepositoryFromEntity.save(commitlist);
 
-      //   if (!latestSha) {
-      //     latestSha = commitsData.sha;
-      //   }
       latestSha = commitsData[commitsData.length - 1].sha;
       repositoryName.lastPageNumber = page; //
 

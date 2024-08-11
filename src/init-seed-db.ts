@@ -18,7 +18,7 @@ export async function initAndSeedDatabase() {
     console.log("Database initialized successfully.");
 
     // Seed the database
-    await seedDatabaseWithRepository();
+    // await seedDatabaseWithRepository();
     console.log("Database seeded with repository data successfully.");
   } catch (error) {
     // Handle and log any errors during initialization or seeding
