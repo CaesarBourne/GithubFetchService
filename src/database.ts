@@ -6,11 +6,11 @@ import { CommitEntity } from "./entity/CommitEntity";
 import * as fs from "fs";
 import * as path from "path";
 
-const dbFilePath = path.resolve(__dirname, ".../database.sqlite");
+const dbFilePath = path.resolve(__dirname, "database.sqlite");
 export const AppDataSource = new DataSource({
   type: "sqlite",
-  //   database: dbFilePath,
-  database: "database.sqlite",
+  database: dbFilePath,
+  //   database: "database.sqlite",
   entities: [RepositoryEntity, CommitEntity],
   synchronize: true,
   logging: true,
