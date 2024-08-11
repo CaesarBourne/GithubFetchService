@@ -1,4 +1,8 @@
-import { commitRepositoryFromEntity } from "./MonitorRepositoryService";
+import { AppDataSource } from "../database";
+import { CommitEntity } from "../entity/CommitEntity";
+
+export const commitRepositoryFromEntity =
+  AppDataSource.getRepository(CommitEntity);
 
 export const fetchTopCommitAuthors = async (limit: number) => {
   return await commitRepositoryFromEntity

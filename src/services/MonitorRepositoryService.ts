@@ -2,11 +2,10 @@ import { AppDataSource } from "../database";
 import { CommitEntity } from "../entity/CommitEntity";
 import { RepositoryEntity } from "../entity/RepositoryEntity";
 import { getCommitsDataFromGit, getRepositoryData } from "./GithubService";
+import { commitRepositoryFromEntity } from "./QueryService";
 
 export const githubServiceRepository =
   AppDataSource.getRepository(RepositoryEntity);
-export const commitRepositoryFromEntity =
-  AppDataSource.getRepository(CommitEntity);
 
 export const monitorRepositoryService = async (
   repoOwner: string,

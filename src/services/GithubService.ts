@@ -5,13 +5,11 @@ import {
   GIT_TOKEN,
   GITHUB_BASE_URL,
 } from "../lib/constant";
-import {
-  commitRepositoryFromEntity,
-  githubServiceRepository,
-} from "./MonitorRepositoryService";
+import { githubServiceRepository } from "./MonitorRepositoryService";
 import { RepositoryEntity } from "../entity/RepositoryEntity";
 import { CommitEntity } from "../entity/CommitEntity";
 import cdrlogger from "../lib/logFormat";
+import { commitRepositoryFromEntity } from "./QueryService";
 
 // export class GitHubService{}
 
@@ -66,8 +64,15 @@ export const fetchRepoDetailsAndSaveInDb = async (
   try {
     const repositoryData = await getRepositoryData(repoOwner, repoName);
 
-    const repositoryEntity = new RepositoryEntity();
-
+    // const repositoryEntity = new RepositoryEntity();
+    let repositoryEntity = await githubServiceRepository.findOneBy({
+      name: repoName,
+    });
+    if (!repositoryEntity) {
+      repositoryEntity = new RepositoryEntity();
+      repositoryEntity.createdAt = new Date(repositoryData.created_at);
+    }
+    //b0e64ff9ad81b75bd70ef94a420403886fe2f11c
     repositoryEntity.name = repositoryData.name;
     repositoryEntity.description = repositoryData.description;
     repositoryEntity.url = repositoryData.html_url;
@@ -76,10 +81,10 @@ export const fetchRepoDetailsAndSaveInDb = async (
     repositoryEntity.starsCount = repositoryData.stargazers_count;
     repositoryEntity.openIssuesCount = repositoryData.open_issues_count;
     repositoryEntity.watchersCount = repositoryData.watchers_count;
-    repositoryEntity.createdAt = new Date(repositoryData.created_at);
-    repositoryEntity.updatedAt = new Date(repositoryData.updated_at);
+    repositoryEntity.updatedAt = new Date();
     repositoryEntity.lastCommitSha = undefined;
 
+    // Save the repository entity updating or inserting
     const savedResponse = await githubServiceRepository.save(repositoryEntity);
 
     console.debug("&&&&&&&&& saved  ", savedResponse);
@@ -103,8 +108,10 @@ export const fetchCommitsAndSaveInDB = async (
       throw new Error(`Repository with name ${repoName} not found.`);
     }
 
-    let page = 1;
+    // let page = 1;
+    let page = repositoryName.lastPageNumber ?? 1;
     let latestSha: string | null = null;
+    //dont  fetch too many page at once
     while (page < 3) {
       //commits data fetch  from gitHub to database
       const commitsData = await getCommitsDataFromGit(
@@ -130,6 +137,8 @@ export const fetchCommitsAndSaveInDB = async (
       //     latestSha = commitsData.sha;
       //   }
       latestSha = commitsData[commitsData.length - 1].sha;
+      repositoryName.lastPageNumber = page; //
+
       page++;
     }
 
@@ -151,6 +160,6 @@ export async function seedDatabaseWithRepository(
   repoOwner?: string,
   repoName?: string
 ) {
-  await fetchRepoDetailsAndSaveInDb(repoName);
-  await fetchCommitsAndSaveInDB(repoName);
+  await fetchRepoDetailsAndSaveInDb(repoOwner, repoName);
+  await fetchCommitsAndSaveInDB(repoOwner, repoName);
 }

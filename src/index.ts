@@ -6,6 +6,7 @@ import monitorRepository from "./routes/monitorRepository";
 import queryRepository from "./routes/queryRepository";
 
 import { port } from "./lib/constant";
+// import { initializeDatabase } from "./database";
 
 const app = express();
 
@@ -18,6 +19,11 @@ app.use((err: any, req: any, res: any, next: any) => {
 app.use("/api/monitor", monitorRepository);
 app.use("/api/query", queryRepository);
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+const startServer = async () => {
+  // await initializeDatabase();
+
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+};
+startServer();
