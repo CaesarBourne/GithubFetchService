@@ -1,3 +1,4 @@
+
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -10,4 +11,6 @@ export const utilities = {
   nodeName: "node1",
   CRYPTO_KEY: "363627dhgska",
 };
+
 export const GIT_TOKEN = process.env.GIT_TOKEN;
+

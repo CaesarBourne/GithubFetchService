@@ -2,7 +2,9 @@ import axios from "axios";
 import {
   CHROMIUM_OWNER,
   CHROMIUM_REPO,
+
   GIT_TOKEN,
+
   GITHUB_BASE_URL,
 } from "../lib/constant";
 import {
@@ -20,12 +22,14 @@ export const getRepositoryData = async (
   repository: string = CHROMIUM_REPO
 ) => {
   const repoResponse = await axios.get(
+
     `${GITHUB_BASE_URL}/${repoOwner}/${repository}`,
     {
       headers: {
         Authorization: `Bearer ${GIT_TOKEN}`,
       },
     }
+
   );
   return repoResponse.data;
 };
@@ -47,9 +51,11 @@ export const getCommitsDataFromGit = async (
         page: page,
         since,
       },
+
       headers: {
         Authorization: `Bearer ${GIT_TOKEN}`,
       },
+
     }
   );
 
@@ -105,7 +111,9 @@ export const fetchCommitsAndSaveInDB = async (
 
     let page = 1;
     let latestSha: string | null = null;
+
     while (page < 3) {
+
       //commits data fetch  from gitHub to database
       const commitsData = await getCommitsDataFromGit(
         repoOwner,
@@ -126,10 +134,12 @@ export const fetchCommitsAndSaveInDB = async (
         return commitEntity;
       });
       await commitRepositoryFromEntity.save(commitlist);
+
       //   if (!latestSha) {
       //     latestSha = commitsData.sha;
       //   }
       latestSha = commitsData[commitsData.length - 1].sha;
+n
       page++;
     }
 
@@ -152,5 +162,7 @@ export async function seedDatabaseWithRepository(
   repoName?: string
 ) {
   await fetchRepoDetailsAndSaveInDb(repoName);
+
+
   await fetchCommitsAndSaveInDB(repoName);
 }

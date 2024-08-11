@@ -12,8 +12,9 @@ router.get("/top-authors", async (req: Request, res: Response) => {
     const authors = await fetchTopCommitAuthors(Number(limit) || 10);
     res.status(200).json(authors);
   } catch (error) {
+
     res.status(500).send("Error retrieving top authors." + error);
-  }
+
 });
 
 // Route to get commits by repository name
