@@ -20,10 +20,10 @@ export const AppDataSource = new DataSource({
 });
 
 export const initializeDatabase = async () => {
-  if (fs.existsSync(dbFilePath)) {
-    console.log("Database already exists. Skipping creation.");
-    return;
-  }
+  //   if (fs.existsSync(dbFilePath)) {
+  //     console.log("Database already exists. Skipping creation.");
+  //     return;
+  //   }
 
   console.log("Database does not exist. Creating now...");
 

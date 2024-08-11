@@ -42,6 +42,9 @@ export class RepositoryEntity {
   @Column({ nullable: true })
   lastCommitSha?: string;
 
+  @Column({ nullable: true })
+  lastPageNumber?: number;
+
   @CreateDateColumn({ name: "createdAt" })
   createdAt!: Date;
 
