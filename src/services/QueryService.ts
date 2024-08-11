@@ -15,11 +15,28 @@ export const fetchTopCommitAuthors = async (limit: number) => {
     .getRawMany();
 };
 
-export const fetchCommitsByRepository = async (repoName: string) => {
+// export const fetchCommitsByRepository = async (repoName: string) => {
+//   return await commitRepositoryFromEntity
+//     .createQueryBuilder("commit")
+//     .innerJoinAndSelect("commit.repository", "repository")
+//     .where("repository.name = :repoName", { repoName })
+//     .getMany();
+// };
+
+export const fetchCommitsByRepository = async (
+  repoName: string,
+  page: number,
+  limit: number
+) => {
+  const offset = (page - 1) * limit;
+
   return await commitRepositoryFromEntity
     .createQueryBuilder("commit")
     .innerJoinAndSelect("commit.repository", "repository")
     .where("repository.name = :repoName", { repoName })
+    .orderBy("commit.date", "DESC")
+    .skip(offset)
+    .take(limit)
     .getMany();
 };
 
