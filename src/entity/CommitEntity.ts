@@ -21,8 +21,9 @@ export class CommitEntity {
   @Column()
   url!: string;
 
+  @Column()
+  sha!: string;
 
   @ManyToOne(() => RepositoryEntity, (repository) => repository.name)
-
   repository!: RepositoryEntity;
 }
