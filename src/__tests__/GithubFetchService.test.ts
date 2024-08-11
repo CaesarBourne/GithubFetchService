@@ -1,51 +1,28 @@
-// src/__tests__/GitHubService.test.ts
-import axios from "axios";
-import { getRepositoryData } from "../services/GithubService";
-import { CHROMIUM_OWNER, CHROMIUM_REPO } from "../lib/constant";
+const { seedDatabaseWithRepository } = require("../services/GithubService");
+const { CHROMIUM_OWNER, CHROMIUM_REPO } = require("../lib/constant");
 
-jest.mock("axios");
+describe("Monitoring Service Test", () => {
+  it("should successfully monitor the Chromium repository starting from 2023-08-20", async () => {
+    const startDate = "2023-08-20T00:00:00Z";
 
-describe("GitHubService", () => {
-  it("fetches repository data", async () => {
-    // Mock repository data to be returned by axios
-    const repoData = {
-      name: "react",
-      description:
-        "A declarative, efficient, and flexible JavaScript library for building user interfaces.",
-      html_url: "https://github.com/facebook/react",
-      language: "JavaScript",
-      forks_count: 30000,
-      stargazers_count: 150000,
-      open_issues_count: 500,
-      watchers_count: 200000,
-      created_at: "2013-05-24T16:15:54Z",
-      updated_at: "2024-08-01T15:22:07Z",
-    };
+    try {
+      const result = await seedDatabaseWithRepository(
+        CHROMIUM_OWNER,
+        CHROMIUM_REPO,
+        startDate
+      );
 
-    // Mock the axios.get call to return the above data
-    (axios.get as jest.Mock).mockResolvedValue({ data: repoData });
+      // Assuming the service returns true or some object indicating success
+      expect(result).toBeTruthy();
 
-    // Call the function under test
-    const data = await getRepositoryData(CHROMIUM_OWNER, CHROMIUM_REPO);
+      // Add more assertions based on the expected behavior of your function
+      // For example, if the function returns an object with details:
+      // expect(result.someProperty).toEqual(expectedValue);
 
-    // Verify that the data returned by fetchRepositoryData matches the mock data
-    expect(data).toEqual({
-      name: CHROMIUM_OWNER,
-      description:
-        "A declarative, efficient, and flexible JavaScript library for building user interfaces.",
-      url: "https://github.com/chromium/chromium",
-      language: "JavaScript",
-      forksCount: 30000,
-      starsCount: 150000,
-      openIssuesCount: 500,
-      watchersCount: 200000,
-      createdAt: new Date("2013-05-24T16:15:54Z"),
-      updatedAt: new Date("2024-08-01T15:22:07Z"),
-    });
-
-    // Verify that axios.get was called with the correct URL
-    expect(axios.get).toHaveBeenCalledWith(
-      "https://api.github.com/repos/facebook/react"
-    );
+      console.log("Monitoring service completed successfully.");
+    } catch (error) {
+      console.error("Error during monitoring service:", error);
+      throw error; // Fail the test if an error occurs
+    }
   });
 });

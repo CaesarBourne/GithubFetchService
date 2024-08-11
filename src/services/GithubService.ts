@@ -15,7 +15,8 @@ import { commitRepositoryFromEntity } from "./QueryService";
 
 export const getRepositoryData = async (
   repoOwner: string = CHROMIUM_OWNER,
-  repository: string = CHROMIUM_REPO
+  repository: string = CHROMIUM_REPO,
+  since: string
 ) => {
   const repoResponse = await axios.get(
     `${GITHUB_BASE_URL}/${repoOwner}/${repository}`,
@@ -31,20 +32,27 @@ export const getRepositoryData = async (
 export const getCommitsDataFromGit = async (
   repoOwner: string = CHROMIUM_OWNER,
   repository: string = CHROMIUM_REPO,
-  page: number,
-  lastSha: string | null,
-  per_page: number = 100,
-  since?: string
+  since: string,
+  latestSha?: any
 ) => {
+  let paramsData;
+
+  if (latestSha) {
+    paramsData = {
+      sha: latestSha, // Fetch commits after this SHA
+      per_page: 100, // GitHub's max per page
+      since,
+    };
+  } else {
+    paramsData = {
+      per_page: 100,
+      since,
+    };
+  }
   const commitResponse = await axios.get(
     `${GITHUB_BASE_URL}/${repoOwner}/${repository}/commits`,
     {
-      params: {
-        sha: lastSha, // Fetch commits after this SHA
-        per_page, // GitHub's max per page
-        page: page,
-        since,
-      },
+      params: paramsData,
 
       headers: {
         Authorization: `Bearer ${GIT_TOKEN}`,
@@ -52,18 +60,16 @@ export const getCommitsDataFromGit = async (
     }
   );
 
-  cdrlogger.info(
-    commitResponse.data.length + "\n" + JSON.stringify(commitResponse.data)
-  );
   return commitResponse.data;
 };
 
 export const fetchRepoDetailsAndSaveInDb = async (
   repoOwner: string = CHROMIUM_OWNER,
-  repoName: string = CHROMIUM_REPO
+  repoName: string = CHROMIUM_REPO,
+  since: string
 ) => {
   try {
-    const repositoryData = await getRepositoryData(repoOwner, repoName);
+    const repositoryData = await getRepositoryData(repoOwner, repoName, since);
 
     // const repositoryEntity = new RepositoryEntity();
     let repositoryEntity = await githubServiceRepository.findOneBy({
@@ -98,7 +104,8 @@ export const fetchRepoDetailsAndSaveInDb = async (
 
 export const fetchCommitsAndSaveInDB = async (
   repoOwner: string = CHROMIUM_OWNER,
-  repoName: string = CHROMIUM_REPO
+  repoName: string = CHROMIUM_REPO,
+  since: string
 ) => {
   try {
     const repositoryName = await githubServiceRepository.findOneBy({
@@ -110,15 +117,22 @@ export const fetchCommitsAndSaveInDB = async (
     }
 
     // let page = 1;
+    //log records
+    cdrlogger.info(repositoryName.lastPageNumber);
+
     let page = repositoryName.lastPageNumber ?? 1;
     let latestSha: string | null = null;
-    //dont  fetch too many page at once
-    while (page < 3) {
+    //not  fetch too many page at once
+    // const pageCompare = repositoryName.lastPageNumber ?? 1;
+
+    const rateLimit = 300;
+
+    while (page < rateLimit) {
       //commits data fetch  from gitHub to database
       const commitsData = await getCommitsDataFromGit(
         repoOwner,
         repoName,
-        page,
+        since,
         latestSha
       );
       if (commitsData.length === 0) break;
@@ -135,9 +149,6 @@ export const fetchCommitsAndSaveInDB = async (
       });
       await commitRepositoryFromEntity.save(commitlist);
 
-      //   if (!latestSha) {
-      //     latestSha = commitsData.sha;
-      //   }
       latestSha = commitsData[commitsData.length - 1].sha;
       repositoryName.lastPageNumber = page; //
 
@@ -159,9 +170,10 @@ export const fetchCommitsAndSaveInDB = async (
 };
 
 export async function seedDatabaseWithRepository(
-  repoOwner?: string,
-  repoName?: string
+  repoOwner: string,
+  repoName: string,
+  since: string
 ) {
-  await fetchRepoDetailsAndSaveInDb(repoOwner, repoName);
-  await fetchCommitsAndSaveInDB(repoOwner, repoName);
+  await fetchRepoDetailsAndSaveInDb(repoOwner, repoName, since);
+  await fetchCommitsAndSaveInDB(repoOwner, repoName, since);
 }
