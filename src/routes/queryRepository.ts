@@ -3,11 +3,14 @@ import {
   fetchCommitsByRepository,
   fetchTopCommitAuthors,
 } from "../services/QueryService";
+import { debug } from "console";
 
 const router = Router();
 
 router.get("/top-authors", async (req: Request, res: Response) => {
   const { limit } = req.query;
+
+  console.debug("limit data %%%%%%%%%% ", limit);
   try {
     const authors = await fetchTopCommitAuthors(Number(limit) || 10);
     res.status(200).json(authors);

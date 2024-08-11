@@ -52,9 +52,9 @@ export const getCommitsDataFromGit = async (
     }
   );
 
-  cdrlogger.info(
-    commitResponse.data.length + "\n" + JSON.stringify(commitResponse.data)
-  );
+  //   cdrlogger.info(
+  //     commitResponse.data.length + "\n" + JSON.stringify(commitResponse.data)
+  //   );
   return commitResponse.data;
 };
 
@@ -110,10 +110,17 @@ export const fetchCommitsAndSaveInDB = async (
     }
 
     // let page = 1;
+    cdrlogger.info(repositoryName.lastPageNumber);
+    console.log(
+      "############## LAST PAGE$$$$$$$$$$$$",
+      repositoryName.lastPageNumber
+    );
+
     let page = repositoryName.lastPageNumber ?? 1;
     let latestSha: string | null = null;
     //dont  fetch too many page at once
-    while (page < 3) {
+    const pageCompare = repositoryName.lastPageNumber ?? 1;
+    while (page < pageCompare + 3) {
       //commits data fetch  from gitHub to database
       const commitsData = await getCommitsDataFromGit(
         repoOwner,

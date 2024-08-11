@@ -30,7 +30,7 @@ export async function initAndSeedDatabase() {
 }
 
 // Example usage
-initAndSeedDatabase().catch((error) => {
-  console.error("Critical failure in initAndSeedDatabase:", error);
-  process.exit(1);
-});
+// initAndSeedDatabase().catch((error) => {
+//   console.error("Critical failure in initAndSeedDatabase:", error);
+//   process.exit(1);
+// });
