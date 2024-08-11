@@ -29,7 +29,7 @@ router.post("/start-monitor", async (req: Request, res: Response) => {
     await initiateMonitoring(owner, repository, startDate);
     res
       .status(200)
-      .send({ status: 1, message: "Monitoring started for repositorysitory." });
+      .send({ status: 0, message: "Monitoring started for repositorysitory." });
   } catch (error) {
     console.error("Error starting monitoring service:", error);
     res.status(500).send("Error starting monitoring service.");
@@ -42,18 +42,18 @@ function isValidGitDate(startDate: string) {
 }
 
 router.post("/stop-monitor", async (req: Request, res: Response) => {
-  const { owner, repo } = req.body;
+  const { owner, repository } = req.body;
 
-  if (!owner || !repo) {
+  if (!owner || !repository) {
     return res.status(400).send("Missing required parameters: owner, repo.");
   }
 
-  const result = stopMonitoring(owner, repo);
+  const result = stopMonitoring(owner, repository);
 
   if (!result.success) {
-    return res.status(400).send(result.message);
+    return res.status(400).send({ status: 1, message: result.message });
   }
 
-  res.status(200).send(result.message);
+  res.status(200).send({ status: 0, message: result.message });
 });
 export default router;

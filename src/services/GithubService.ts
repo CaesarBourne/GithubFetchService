@@ -38,12 +38,17 @@ export const getCommitsDataFromGit = async (
   let paramsData;
 
   if (latestSha) {
+    console.log("######### latest sha $$$$$$$$$$", latestSha);
+    cdrlogger.info(latestSha);
+
     paramsData = {
       sha: latestSha, // Fetch commits after this SHA
-      per_page: 100, // GitHub's max per page
+      per_page: 10, // GitHub's max per page
       since,
     };
   } else {
+    console.log("no lates sha !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
     paramsData = {
       per_page: 100,
       since,
@@ -89,7 +94,8 @@ export const fetchRepoDetailsAndSaveInDb = async (
     repositoryEntity.openIssuesCount = repositoryData.open_issues_count;
     repositoryEntity.watchersCount = repositoryData.watchers_count;
     repositoryEntity.updatedAt = new Date();
-    repositoryEntity.lastCommitSha = undefined;
+    repositoryEntity.lastCommitSha =
+      repositoryEntity.lastCommitSha || undefined;
 
     // Save the repository entity updating or inserting
     const savedResponse = await githubServiceRepository.save(repositoryEntity);
@@ -121,11 +127,11 @@ export const fetchCommitsAndSaveInDB = async (
     cdrlogger.info(repositoryName.lastPageNumber);
 
     let page = repositoryName.lastPageNumber ?? 1;
-    let latestSha: string | null = null;
+    let latestSha: string | null = repositoryName.lastCommitSha || null;
     //not  fetch too many page at once
     // const pageCompare = repositoryName.lastPageNumber ?? 1;
 
-    const rateLimit = 50;
+    const rateLimit = 10;
 
     while (page < rateLimit) {
       //commits data fetch  from gitHub to database
