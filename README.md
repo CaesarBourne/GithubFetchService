@@ -74,6 +74,45 @@ Before running this application, ensure that you have the following installed on
 First, clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/yourusername/yourrepository.git
-cd yourrepository
+git clone https://github.com/CaesarBourne/GithubFetchService.git
+cd GithubFetchService
 ```
+
+## Install Dependencies
+
+```bash
+yarn install
+```
+
+## Build and Start Containers
+
+You can use Docker Compose to build and start the necessary containers:
+
+```bash
+docker-compose up --build
+```
+
+To start the containers:
+
+```bash
+docker-compose up
+```
+
+If you prefer to run the application locally without Docker, use the following command:
+
+```bash
+yarn start
+```
+
+## Generating a GitHub Personal Access Token
+
+To interact with GitHub’s API, you may need a Personal Access Token (PAT). Follow these steps to generate one:
+
+    1.	Log in to GitHub: Visit https://github.com and log in to your account.
+    2.	Navigate to Settings: Click on your profile picture in the top-right corner and select “Settings”.
+    3.	Access Developer Settings: Scroll down and click on “Developer settings” in the left-hand menu.
+    4.	Create a New Token: Click “Personal access tokens” and then “Generate new token”.
+    5.	Select Scopes: Choose the necessary scopes, such as repo, to allow the token to access repositories.
+    6.	Generate and Copy: Click “Generate token” and copy the token. Store it securely.
+
+Update your .env file with the generated token:
