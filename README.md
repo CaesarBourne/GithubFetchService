@@ -1,49 +1,3 @@
-<!-- # GithubFetchService
-
-## Getting Started
-
-Follow these steps below to start application:
-
-1. Install dependencies:
-
-   ```bash
-   docker compose
-   ```
-
-   This project is one that pulls data froma git repository and pushes toa sqlite database
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed on your machine:
-
-- Docker
-- Docker Compose and postman agent
-- Postman or Postman Web
-
-## Getting Started
-
-### Clone the Repository
-
-First, clone this repository to your local machine:
-
-```sh
-git clone https://github.com/yourusername/yourrepository.git
-cd yourrepository
-```
-
-Build and start the containers
-
-```sh
-docker-compose up --build
-```
-
-Start the containers
-
-````sh
-docker-compose up
-```
-```` -->
-
 # GithubFetchService
 
 ## Overview
@@ -81,6 +35,7 @@ cd GithubFetchService
 ## Environment Variables Setup
 
 This project requires certain environment variables to function correctly. A .env.example file is provided for reference.
+
 • Step 1: Copy .env.example to create your own .env file:
 
 ```bash
@@ -157,8 +112,6 @@ GIT_TOKEN=your_personal_access_token
 
 1. Fetch Commits: The service fetches commits from the specified GitHub repository and saves them into an SQLite database. 2. Monitor Repository: A cron job can be set up to monitor the repository, fetching new commits periodically. 3. API Endpoints: Use provided API endpoints to query commit data and manage the monitoring process.
 
-<!-- Running the Application -->
-
 Starting the Application
 
 To start the application, use:
@@ -218,7 +171,7 @@ Important Note:
 
     •	Single Job Limitation: The repository can only start one monitoring process at a time. If a monitoring job is already running for a repository, you cannot start another one until the current job is stopped. This ensures that resources are not duplicated, and data integrity is maintained.
 
-1.  Fetch All Commits of a Repository:
+2.  Fetch All Commits of a Repository:
 
 ```bash
 GET /commits/:repositoryName?page=1&limit=10
