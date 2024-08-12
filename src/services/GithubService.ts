@@ -244,8 +244,11 @@ export const getCommitsDataFromGit = async (
       },
     }
   );
+  const commitsData = latestSha
+    ? commitResponse.data.filter((commit: any) => commit.sha !== latestSha)
+    : commitResponse.data;
 
-  return commitResponse.data;
+  return commitsData;
 };
 
 // Fetch repository details and save in the database
@@ -289,7 +292,8 @@ export const fetchRepoDetailsAndSaveInDb = async (
 export const fetchCommitsAndSaveInDB = async (
   repoOwner: string = CHROMIUM_OWNER,
   repoName: string = CHROMIUM_REPO,
-  since: string
+  since: string,
+  backgroundservice?: boolean
 ) => {
   try {
     const repository = await githubServiceRepository.findOneBy({
@@ -301,8 +305,10 @@ export const fetchCommitsAndSaveInDB = async (
     }
 
     let page = 1;
-    let latestSha: string | null = repository.lastCommitSha || null;
-    const rateLimit = 10;
+    let latestSha: string | null = backgroundservice
+      ? null
+      : repository.lastCommitSha || null;
+    const rateLimit = 4000;
 
     while (page < rateLimit) {
       const commitsData = await getCommitsDataFromGit(
@@ -312,8 +318,15 @@ export const fetchCommitsAndSaveInDB = async (
         latestSha
       );
 
+      //only stop monitoring background service
       if (commitsData.length === 0) {
-        stopMonitoring(repoOwner, repoName);
+        console.error("gotten to the limit break now ", commitsData);
+        cdrlogger.info(commitsData);
+        if (backgroundservice) {
+          console.log("its background service, no sha", commitsData);
+        } else {
+          stopMonitoring(repoOwner, repoName);
+        }
         break;
       }
 
@@ -336,8 +349,8 @@ export const fetchCommitsAndSaveInDB = async (
       page++;
     }
 
-    // Update the lastCommitSha in the repository
     if (latestSha) {
+      // Update the lastCommitSha in the repository
       repository.lastCommitSha = latestSha;
       await githubServiceRepository.save(repository);
     }
@@ -353,8 +366,9 @@ export const fetchCommitsAndSaveInDB = async (
 export async function seedDatabaseWithRepository(
   repoOwner: string,
   repoName: string,
-  since: string
+  since: string,
+  backgroundservice?: boolean
 ) {
   await fetchRepoDetailsAndSaveInDb(repoOwner, repoName);
-  await fetchCommitsAndSaveInDB(repoOwner, repoName, since);
+  await fetchCommitsAndSaveInDB(repoOwner, repoName, since, backgroundservice);
 }

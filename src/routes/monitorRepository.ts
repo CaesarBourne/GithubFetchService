@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import {
   initiateMonitoring,
+  initiateNewRecordsCheck,
   stopMonitoring,
 } from "../services/MonitorRepositoryService";
 import moment from "moment";
@@ -27,6 +28,9 @@ router.post("/start-monitor", async (req: Request, res: Response) => {
 
   try {
     const result = await initiateMonitoring(owner, repository, startDate);
+
+    //initiate new records check from now on
+    await initiateNewRecordsCheck(owner, repository, new Date().toISOString());
     if (!result.success) {
       return res.status(400).send({ status: 1, message: result.message });
     }
