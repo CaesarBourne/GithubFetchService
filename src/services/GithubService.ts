@@ -39,6 +39,8 @@ export const getCommitsDataFromGit = async (
   backgroundservice?: boolean
 ) => {
   if (backgroundservice) {
+    cdrlogger.info("BACKGOUND RECORS#############################");
+    console.error("BACKGOUND RECORS#############################");
     since = new Date().toISOString();
   }
   const paramsData = latestSha
@@ -61,6 +63,17 @@ export const getCommitsDataFromGit = async (
       },
     }
   );
+  if (backgroundservice) {
+    cdrlogger.info(
+      "PARAMSSSSSSSSSSSS#############################",
+      paramsData
+    );
+    console.info(
+      "PARAMMSSSS#############################",
+      JSON.stringify(paramsData)
+    );
+    since = new Date().toISOString();
+  }
   const commitsData = latestSha
     ? commitResponse.data.filter((commit: any) => commit.sha !== latestSha)
     : commitResponse.data;
