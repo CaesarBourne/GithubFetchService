@@ -143,7 +143,7 @@ export const fetchCommitsAndSaveInDB = async (
     let latestSha: string | null = backgroundservice
       ? null
       : repository.lastCommitSha || null;
-    const rateLimit = 4000;
+    const rateLimit = 4900;
 
     while (page < rateLimit) {
       const commitsData = await getCommitsDataFromGit(
@@ -180,7 +180,7 @@ export const fetchCommitsAndSaveInDB = async (
       await commitRepositoryFromEntity.save(commitEntities);
 
       // Update the latest SHA to the last commit in this batch
-      latestSha = commitsData[commitsData.length - 1].sha;
+      latestSha = commitsData[commitsData.length - 30].sha;
 
       page++;
     }
