@@ -228,11 +228,11 @@ export const getCommitsDataFromGit = async (
     ? {
         since,
         sha: latestSha, // Fetch commits after this SHA
-        per_page: 2, // GitHub's max per page
+        per_page: 100, // GitHub's max per page
       }
     : {
         since,
-        per_page: 2,
+        per_page: 100,
       };
 
   const commitResponse = await axios.get(
@@ -308,7 +308,7 @@ export const fetchCommitsAndSaveInDB = async (
     let latestSha: string | null = backgroundservice
       ? null
       : repository.lastCommitSha || null;
-    const rateLimit = 10;
+    const rateLimit = 4000;
 
     while (page < rateLimit) {
       const commitsData = await getCommitsDataFromGit(
@@ -317,14 +317,16 @@ export const fetchCommitsAndSaveInDB = async (
         since,
         latestSha
       );
-      if (backgroundservice) {
-        console.log("its background service, no sha", commitsData);
-      }
 
+      //only stop monitoring background service
       if (commitsData.length === 0) {
         console.error("gotten to the limit break now ", commitsData);
         cdrlogger.info(commitsData);
-        stopMonitoring(repoOwner, repoName);
+        if (backgroundservice) {
+          console.log("its background service, no sha", commitsData);
+        } else {
+          stopMonitoring(repoOwner, repoName);
+        }
         break;
       }
 
