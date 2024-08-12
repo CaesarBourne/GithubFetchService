@@ -3,6 +3,7 @@ import {
   initiateMonitoring,
   initiateNewRecordsCheck,
   stopMonitoring,
+  stopNewRecordsCheck,
 } from "../services/MonitorRepositoryService";
 import moment from "moment";
 
@@ -62,6 +63,22 @@ router.post("/stop-monitor", async (req: Request, res: Response) => {
 
   if (!result.success) {
     return res.status(400).send({ status: 1, message: result.message });
+  }
+
+  res.status(200).send({ status: 0, message: result.message });
+});
+
+router.post("/stop-background-monitor", async (req: Request, res: Response) => {
+  const { owner, repository } = req.body;
+
+  if (!owner || !repository) {
+    return res.status(400).send("Missing required parameters: owner, repo.");
+  }
+
+  const result = stopNewRecordsCheck(owner, repository);
+
+  if (!result?.success) {
+    return res.status(400).send({ status: 1, message: result?.message });
   }
 
   res.status(200).send({ status: 0, message: result.message });
