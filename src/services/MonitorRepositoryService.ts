@@ -30,7 +30,7 @@ export const initiateMonitoring = async (
   }
 
   // Schedule the cron job to run every 30 minutes
-  const job = cron.schedule("*/1 * * * *", async () => {
+  const job = cron.schedule("*/59 * * * *", async () => {
     try {
       console.log(`Fetching data for ${repoKey}...`);
       await seedDatabaseWithRepository(owner, repo, since);
@@ -87,8 +87,8 @@ export const initiateNewRecordsCheck = async (owner: string, repo: string) => {
     return { success: false, message };
   }
   let prsentDate = new Date().toISOString();
-  // Schedule the cron job to run every 2 minutes
-  const job = cron.schedule("*/1 * * * *", async () => {
+  // Schedule the cron job to run every 30 minutes
+  const job = cron.schedule("*/30 * * * *", async () => {
     try {
       console.log(
         `Checking for new records in ${repoKey} since ${prsentDate}...`
