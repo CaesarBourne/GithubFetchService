@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "9d9a8147-a4e1-4297-9473-c08a40ac984a",
+		"name": "Github Fetch an Save service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "5371152",
+		"_collection_link": "https://warped-crater-670203.postman.co/workspace/New-Team-Workspace~ca06e887-e5e5-4835-a6ab-cbc1d7fe043b/collection/5371152-9d9a8147-a4e1-4297-9473-c08a40ac984a?action=share&source=collection_link&creator=5371152"
+	},
+	"item": [
+		{
+			"name": "Fetch All commits of repository",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/query/commits/chromium?limit=10&page=1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"query",
+						"commits",
+						"chromium"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Repo monitoring",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"owner\" : \"chromium\",\n    \"repository\" : \"chromium\",\n    \"startDate\" : \"2024-07-01T00:00:00Z\"\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3000/api/monitor/start-monitor"
+			},
+			"response": []
+		},
+		{
+			"name": "Stop Monitoring Repo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"owner\" : \"chromium\",\n    \"repository\" : \"chromium\"\n\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:3000/api/monitor/stop-monitor"
+			},
+			"response": []
+		}
+	]
+}
