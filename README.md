@@ -78,6 +78,38 @@ git clone https://github.com/CaesarBourne/GithubFetchService.git
 cd GithubFetchService
 ```
 
+## Environment Variables Setup
+
+This project requires certain environment variables to function correctly. A .env.example file is provided for reference.
+• Step 1: Copy .env.example to create your own .env file:
+
+```bash
+cp .env.example .env
+```
+
+Step 2: Open the .env file and fill in the required values, especially the GIT_TOKEN.
+
+```bash
+# .env
+
+# GitHub Personal Access Token (required)
+GIT_TOKEN=your_actual_github_personal_access_token_here
+
+# Base URL for GitHub API
+GITHUB_BASE_URL=https://api.github.com/repos
+
+# GitHub Repository Owner and Name
+CHROMIUM_OWNER=chromium
+CHROMIUM_REPO=chromium
+
+# Application Port
+PORT=3000
+
+# Utility configurations
+NODE_NAME=node1
+CRYPTO_KEY=363627dhgska
+```
+
 ## Install Dependencies
 
 ```bash
