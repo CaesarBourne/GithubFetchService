@@ -177,3 +177,52 @@ Response :
   ]
 }
 ```
+
+    2.	Start Monitoring a Repository:
+
+```bash
+POST /monitor/start-monitor
+```
+
+Example:
+
+```bash
+curl -X POST "http://localhost:3000/api/monitor/start-monitor" -H "Content-Type: application/json" -d '{
+  "owner": "chromium",
+  "repository": "chromium",
+  "startDate": "2023-08-20T00:00:00Z"
+}'
+```
+
+Response:
+
+```bash
+{
+  "status": 0,
+  "message": "Monitoring started for repository chromium/chromium."
+}
+```
+
+    3.	Stop Monitoring a Repository:
+
+```bash
+POST /monitor/stop-monitor
+```
+
+Example:
+
+```bash
+curl -X POST "http://localhost:3000/api/monitor/stop-monitor" -H "Content-Type: application/json" -d '{
+  "owner": "chromium",
+  "repository": "chromium"
+}'
+```
+
+Response:
+
+```bash
+{
+  "status": 0,
+  "message": "Monitoring job stopped for chromium/chromium."
+}
+```
