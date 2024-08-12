@@ -30,7 +30,7 @@ router.post("/start-monitor", async (req: Request, res: Response) => {
     const result = await initiateMonitoring(owner, repository, startDate);
 
     //initiate new records check from now on
-    await initiateNewRecordsCheck(owner, repository, new Date().toISOString());
+    await initiateNewRecordsCheck(owner, repository);
     if (!result.success) {
       return res.status(400).send({ status: 1, message: result.message });
     }

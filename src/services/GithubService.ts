@@ -222,8 +222,12 @@ export const getCommitsDataFromGit = async (
   repoOwner: string = CHROMIUM_OWNER,
   repository: string = CHROMIUM_REPO,
   since: string,
-  latestSha?: string | null
+  latestSha?: string | null,
+  backgroundservice?: boolean
 ) => {
+  if (backgroundservice) {
+    since = new Date().toISOString();
+  }
   const paramsData = latestSha
     ? {
         since,
