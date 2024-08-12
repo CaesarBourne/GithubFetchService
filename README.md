@@ -180,6 +180,8 @@ Response :
 
     2.	Start Monitoring a Repository:
 
+    the repository can only start a proceess for a job at a time
+
 ```bash
 POST /monitor/start-monitor
 ```

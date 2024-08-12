@@ -26,10 +26,16 @@ router.post("/start-monitor", async (req: Request, res: Response) => {
   }
 
   try {
-    await initiateMonitoring(owner, repository, startDate);
-    res
-      .status(200)
-      .send({ status: 0, message: "Monitoring started for repositorysitory." });
+    const result = await initiateMonitoring(owner, repository, startDate);
+    if (!result.success) {
+      return res.status(400).send({ status: 1, message: result.message });
+    }
+
+    res.status(200).send({
+      status: 0,
+      message:
+        "Monitoring started for repositorysitory." + owner + " / " + repository,
+    });
   } catch (error) {
     console.error("Error starting monitoring service:", error);
     res.status(500).send("Error starting monitoring service.");
