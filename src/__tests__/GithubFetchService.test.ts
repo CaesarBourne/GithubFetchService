@@ -1,8 +1,8 @@
-const { seedDatabaseWithRepository } = require("../services/GithubService");
-const { CHROMIUM_OWNER, CHROMIUM_REPO } = require("../lib/constant");
+import { seedDatabaseWithRepository } from "../services/GithubService";
+import { CHROMIUM_OWNER, CHROMIUM_REPO } from "../lib/constant";
 
 describe("Monitoring Service Test", () => {
-  it("should successfully monitor the Chromium repository starting from 2023-08-20", async () => {
+  it("should successfully monitor the Chromium repository starting from 2024-08-10", async () => {
     const startDate = "2024-08-10T00:00:00Z";
 
     try {
@@ -13,7 +13,6 @@ describe("Monitoring Service Test", () => {
       );
 
       expect(result).toBeTruthy();
-
       console.log("Monitoring service completed successfully.");
     } catch (error) {
       console.error("Error during monitoring service:", error);

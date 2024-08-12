@@ -29,7 +29,7 @@ export const getRepositoryData = async (
   );
   return repoResponse.data;
 };
-//start time from 10 minutes ago
+//start time from 30 minutes ago
 const getStartDateFrom10MinutesAgo = (): string => {
   const now = new Date();
   now.setMinutes(now.getMinutes() - 30);
