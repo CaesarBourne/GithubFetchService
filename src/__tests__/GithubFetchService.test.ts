@@ -1,44 +1,48 @@
-import {
-  seedDatabaseWithRepository,
-  getRepositoryData,
-} from "../services/GithubService";
-import { CHROMIUM_OWNER, CHROMIUM_REPO } from "../lib/constant";
+import { initiateMonitoring } from "../services/MonitorRepositoryService"; // Adjust the path to where your service is located
+import { AppDataSource } from "../database"; // Adjust the path to your database config
 
-describe("GitHubService Tests", () => {
-  it("fetches repository data", async () => {
-    const data = await getRepositoryData(CHROMIUM_OWNER, CHROMIUM_REPO);
-
-    // Adjusted to match the GitHub API response format
-    expect(data).toEqual({
-      name: "react", // Adjust according to the actual repo you're testing
-      description:
-        "A declarative, efficient, and flexible JavaScript library for building user interfaces.",
-      html_url: "https://github.com/facebook/react", // Adjust according to the actual repo you're testing
-      language: "JavaScript",
-      forks_count: 30000,
-      stargazers_count: 150000,
-      open_issues_count: 500,
-      watchers_count: 200000,
-      created_at: "2013-05-24T16:15:54Z",
-      updated_at: "2024-08-01T15:22:07Z",
-    });
+describe("initiateMonitoring", () => {
+  beforeAll(async () => {
+    // Initialize the database before tests run
+    await AppDataSource.initialize();
   });
 
-  it("should successfully monitor the Chromium repository starting from 2024-08-10", async () => {
-    const startDate = "2024-08-10T00:00:00Z";
+  afterAll(async () => {
+    // Close the database connection after all tests have run
+    await AppDataSource.destroy();
+  });
 
-    try {
-      const result = await seedDatabaseWithRepository(
-        CHROMIUM_OWNER,
-        CHROMIUM_REPO,
-        startDate
-      );
+  it("should start monitoring for the given repository", async () => {
+    const owner = "CaesarBourne";
+    const repository = "GithubFetchService";
+    const startDate = "2024-03-01T00:00:00Z";
 
-      expect(result).toBeTruthy();
-      console.log("Monitoring service completed successfully.");
-    } catch (error) {
-      console.error("Error during monitoring service:", error);
-      throw error; // Fail the test if an error occurs
-    }
+    const result = await initiateMonitoring(owner, repository, startDate);
+
+    // Expect the result to be defined and successful
+    expect(result).toBeDefined();
+    expect(result.success).toBe(true);
+    expect(result.message).toBe(
+      `Monitoring started for ${owner}/${repository}.`
+    );
+  });
+
+  it("should not start monitoring if a job is already running", async () => {
+    const owner = "CaesarBourne";
+    const repository = "GithubFetchService";
+    const startDate = "2024-03-01T00:00:00Z";
+
+    // First, start the monitoring job
+    await initiateMonitoring(owner, repository, startDate);
+
+    // Attempt to start the monitoring job again
+    const result = await initiateMonitoring(owner, repository, startDate);
+
+    // Expect the second attempt to fail because the job is already running
+    expect(result).toBeDefined();
+    expect(result.success).toBe(false);
+    expect(result.message).toBe(
+      `A monitoring job is already running for ${owner}/${repository}.`
+    );
   });
 });

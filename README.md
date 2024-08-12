@@ -71,7 +71,7 @@ CRYPTO_KEY=363627dhgska
 yarn install
 ```
 
-## Build and Start Containers
+<!-- ## Build and Start Containers
 
 You can use Docker Compose to build and start the necessary containers:
 
@@ -83,7 +83,7 @@ To start the containers:
 
 ```bash
 docker-compose up
-```
+``` -->
 
 If you prefer to run the application locally without Docker, use the following command:
 
