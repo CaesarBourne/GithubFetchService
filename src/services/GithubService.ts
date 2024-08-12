@@ -32,7 +32,7 @@ export const getRepositoryData = async (
 //start time from 30 minutes ago
 const getStartDateFrom10MinutesAgo = (): string => {
   const now = new Date();
-  now.setMinutes(now.getMinutes() - 30);
+  now.setMinutes(now.getMinutes() - 1);
   return now.toISOString();
 };
 // Get commits data from GitHub
