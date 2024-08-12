@@ -28,8 +28,8 @@ export const initiateMonitoring = async (
     return { success: false, message };
   }
 
-  // Schedule the cron job to run every 10 minutes
-  const job = cron.schedule("*/1 * * * *", async () => {
+  // Schedule the cron job to run every 30 minutes
+  const job = cron.schedule("*/30 * * * *", async () => {
     try {
       console.log(`Fetching data for ${repoKey}...`);
       await seedDatabaseWithRepository(owner, repo, since);
