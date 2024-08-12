@@ -228,3 +228,5 @@ Response:
   "message": "Monitoring job stopped for chromium/chromium."
 }
 ```
+
+##t THE POSTMAN COLLECTION FOR THSI SOLUTION IS ALSO IN THE ROOT DIRECTORY, it can be imported to run the application
