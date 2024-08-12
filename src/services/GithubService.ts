@@ -29,7 +29,12 @@ export const getRepositoryData = async (
   );
   return repoResponse.data;
 };
-
+//start time from 10 minutes ago
+const getStartDateFrom10MinutesAgo = (): string => {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - 1);
+  return now.toISOString();
+};
 // Get commits data from GitHub
 export const getCommitsDataFromGit = async (
   repoOwner: string = CHROMIUM_OWNER,
@@ -41,7 +46,7 @@ export const getCommitsDataFromGit = async (
   if (backgroundservice) {
     cdrlogger.info("BACKGOUND RECORS#############################");
     console.error("BACKGOUND RECORS#############################");
-    since = new Date().toISOString();
+    since = getStartDateFrom10MinutesAgo();
   }
   const paramsData = latestSha
     ? {
@@ -63,17 +68,17 @@ export const getCommitsDataFromGit = async (
       },
     }
   );
-  if (backgroundservice) {
-    cdrlogger.info(
-      "PARAMSSSSSSSSSSSS#############################",
-      paramsData
-    );
-    console.info(
-      "PARAMMSSSS#############################",
-      JSON.stringify(paramsData)
-    );
-    since = new Date().toISOString();
-  }
+  //   if (backgroundservice) {
+  //     cdrlogger.info(
+  //       "PARAMSSSSSSSSSSSS#############################",
+  //       paramsData
+  //     );
+  //     console.info(
+  //       "PARAMMSSSS#############################",
+  //       JSON.stringify(paramsData)
+  //     );
+  //     since = new Date().toISOString();
+  //   }
   const commitsData = latestSha
     ? commitResponse.data.filter((commit: any) => commit.sha !== latestSha)
     : commitResponse.data;
