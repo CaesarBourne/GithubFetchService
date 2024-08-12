@@ -401,12 +401,17 @@ sequenceDiagram
     participant APIServer as API Server
     participant GitHubAPI as GitHub API
     participant Database as SQLite Database
-    participant Cron as Scheduler (Node-Cron)
+    participant  Back-Cron as OldRecords-Scheduler (Node-Cron)
+    participant Cron as NewRecords-Schdeluer (Node-Cron)
 
     Client->>APIServer: POST /monitor/start-monitor (Start monitoring)
-    APIServer->>Cron: Schedule cron job for monitoring
-    Cron->>GitHubAPI: Fetch commits and repo data
-    GitHubAPI-->>Cron: Return commits and repo data
+    APIServer->>Back-Cron: Schedule cron job for monitoring to fetch data from a start date
+    Back-Cron->>GitHubAPI: Fetch Old commits and repo data
+    GitHubAPI-->>Back-Cron: Return commits and repo data for old records till startdate
+    APIServer->>Cron: Schedule background process cron job for monitoring new data
+    Back-Cron->>Database: Save Old data to SQLite database
+    Cron->>GitHubAPI: Fetch New commits and repo data
+    GitHubAPI-->>Cron: Return New commits after date and repo data
     Cron->>Database: Save data to SQLite database
     Database-->>Cron: Data saved
     Cron-->>APIServer: Job started and data saved
@@ -426,6 +431,6 @@ sequenceDiagram
     Cron-->>APIServer: Job stopped
 
     Client->>APIServer: POST /monitor/stop-background-monitor (Stop background monitoring)
-    APIServer->>Cron: Stop background job
-    Cron-->>APIServer: Background job stopped
+    APIServer->>Back-Cron: Stop background job
+    Back-Cron-->>APIServer: Background job stopped
 ```
