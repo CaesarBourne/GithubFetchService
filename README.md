@@ -128,7 +128,7 @@ You can interact with the service using the following API endpoints.
 
     1.	Start Monitoring a Repository:
 
-    the repository can only start a proceess for a job at a time
+    the repository can only start a proceess for a job at a time, it fetches the repo meta data detials from git hub and populates the repository entity table, also it fetches the lsit of commit form the specified date topopulate the database
 
 ```bash
 POST /monitor/start-monitor
