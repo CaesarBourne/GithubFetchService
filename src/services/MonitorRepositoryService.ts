@@ -87,7 +87,7 @@ export const initiateNewRecordsCheck = async (owner: string, repo: string) => {
   }
   let prsentDate = new Date().toISOString();
   // Schedule the cron job to run every 2 minutes
-  const job = cron.schedule("*/2 * * * *", async () => {
+  const job = cron.schedule("*/1 * * * *", async () => {
     try {
       console.log(
         `Checking for new records in ${repoKey} since ${prsentDate}...`
