@@ -116,3 +116,69 @@ To interact with GitHub’s API, you may need a Personal Access Token (PAT). Fol
     6.	Generate and Copy: Click “Generate token” and copy the token. Store it securely.
 
 Update your .env file with the generated token:
+
+```bash
+GIT_TOKEN=your_personal_access_token
+```
+
+## How the Application Works
+
+1. Fetch Commits: The service fetches commits from the specified GitHub repository and saves them into an SQLite database. 2. Monitor Repository: A cron job can be set up to monitor the repository, fetching new commits periodically. 3. API Endpoints: Use provided API endpoints to query commit data and manage the monitoring process.
+
+Running the Application
+
+Starting the Application
+
+To start the application, use:
+
+```bash
+yarn start
+```
+
+This will initialize the service and prepare it for handling requests.
+
+## API Endpoints
+
+You can interact with the service using the following API endpoints.
+
+    1.	Fetch All Commits of a Repository:
+
+    ```bash
+
+GET /commits/:repositoryName?page=1&limit=10
+
+````
+Example :
+
+    ```bash
+curl "http://localhost:3000/api/query/commits/chromium?limit=10&page=1"
+````
+
+Response :
+
+    ```bash
+
+{
+"status": 0,
+"message": "Success",
+"data": [
+{
+"id": 1,
+"message": "Initial commit",
+"author": "John Doe",
+"date": "2023-08-20T00:00:00Z",
+"url": "https://github.com/chromium/chromium/commit/1",
+"sha": "abcdef1234567890",
+"repository": {
+"id": 1,
+"name": "chromium",
+"url": "https://github.com/chromium/chromium"
+}
+},
+...
+]
+}
+
+```
+
+```
