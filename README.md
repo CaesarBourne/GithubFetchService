@@ -143,42 +143,37 @@ You can interact with the service using the following API endpoints.
 
     1.	Fetch All Commits of a Repository:
 
-    ```bash
-
+```bash
 GET /commits/:repositoryName?page=1&limit=10
+```
 
-````
-Example :
+Example
 
-    ```bash
+```bash
 curl "http://localhost:3000/api/query/commits/chromium?limit=10&page=1"
-````
+```
 
 Response :
 
-    ```bash
-
+```bash
 {
-"status": 0,
-"message": "Success",
-"data": [
-{
-"id": 1,
-"message": "Initial commit",
-"author": "John Doe",
-"date": "2023-08-20T00:00:00Z",
-"url": "https://github.com/chromium/chromium/commit/1",
-"sha": "abcdef1234567890",
-"repository": {
-"id": 1,
-"name": "chromium",
-"url": "https://github.com/chromium/chromium"
+  "status": 0,
+  "message": "Success",
+  "data": [
+    {
+      "id": 1,
+      "message": "Initial commit",
+      "author": "JEmma",
+      "date": "2023-08-20T00:00:00Z",
+      "url": "https://github.com/chromium/chromium/commit/1",
+      "sha": "abcdef1234567890",
+      "repository": {
+        "id": 1,
+        "name": "chromium",
+        "url": "https://github.com/chromium/chromium"
+      }
+    },
+    ...
+  ]
 }
-},
-...
-]
-}
-
-```
-
 ```
