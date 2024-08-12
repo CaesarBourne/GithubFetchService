@@ -17,7 +17,8 @@ export const githubServiceRepository =
 export const initiateMonitoring = async (
   owner: string,
   repo: string,
-  since: string
+  since: string,
+  test?: boolean
 ) => {
   const repoKey = `${owner}/${repo}`;
 
