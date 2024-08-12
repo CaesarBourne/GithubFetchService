@@ -210,11 +210,7 @@ export const stopMonitoring = (owner: string, repo: string) => {
  * @param repo - The name of the GitHub repository.
  * @param since - The date from which to start checking for new records.
  */
-export const initiateNewRecordsCheck = async (
-  owner: string,
-  repo: string,
-  since: string
-) => {
+export const initiateNewRecordsCheck = async (owner: string, repo: string) => {
   const repoKey = `${owner}/${repo}/newRecords`;
 
   // Check if a cron job is already running for this repository
@@ -223,12 +219,14 @@ export const initiateNewRecordsCheck = async (
     console.log(message);
     return { success: false, message };
   }
-
+  let prsentDate = new Date().toISOString();
   // Schedule the cron job to run every 2 minutes
   const job = cron.schedule("*/2 * * * *", async () => {
     try {
-      console.log(`Checking for new records in ${repoKey} since ${since}...`);
-      await seedDatabaseWithRepository(owner, repo, since, true);
+      console.log(
+        `Checking for new records in ${repoKey} since ${prsentDate}...`
+      );
+      await seedDatabaseWithRepository(owner, repo, prsentDate, true);
       console.log(`New records check and save completed for ${repoKey}.`);
     } catch (error) {
       console.error(
