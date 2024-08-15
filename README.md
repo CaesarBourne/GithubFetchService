@@ -415,6 +415,7 @@ sequenceDiagram
     Cron->>Database: Save data to SQLite database
     Database-->>Cron: Data saved
     Cron-->>APIServer: Job started and data saved
+    APIServer-->>Client: Success Monitor Response
 
     Client->>APIServer: GET /query/commits/:repositoryName?page=1&limit=10 (Fetch commits)
     APIServer->>Database: Query for commits with pagination
@@ -429,8 +430,10 @@ sequenceDiagram
     Client->>APIServer: POST /monitor/stop-monitor (Stop monitoring)
     APIServer->>Cron: Stop monitoring job
     Cron-->>APIServer: Job stopped
+    APIServer-->>Client: Success response Job Stopped
 
     Client->>APIServer: POST /monitor/stop-background-monitor (Stop background monitoring)
     APIServer->>Back-Cron: Stop background job
     Back-Cron-->>APIServer: Background job stopped
+    APIServer-->>Client: User succes prompt job stopped
 ```
