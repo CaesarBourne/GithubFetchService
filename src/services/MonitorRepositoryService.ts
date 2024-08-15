@@ -2,6 +2,7 @@ import { AppDataSource } from "../database";
 import { RepositoryEntity } from "../entity/RepositoryEntity";
 import cron from "node-cron";
 import { seedDatabaseWithRepository } from "./GithubService";
+import { CRON_BACKGROUND_TIME } from "../lib/constant";
 
 const activeJobs = new Map<string, cron.ScheduledTask>();
 
@@ -30,7 +31,7 @@ export const initiateMonitoring = async (
   }
 
   // Schedule the cron job to run every 59 minutes
-  const job = cron.schedule("*/59 * * * *", async () => {
+  const job = cron.schedule("*/2 * * * *", async () => {
     try {
       console.log(`Fetching data for ${repoKey}...`);
       await seedDatabaseWithRepository(owner, repo, since);
@@ -88,7 +89,7 @@ export const initiateNewRecordsCheck = async (owner: string, repo: string) => {
   }
   let prsentDate = new Date().toISOString();
   // Schedule the cron job to run every 10 minutes
-  const job = cron.schedule("*/10 * * * *", async () => {
+  const job = cron.schedule(`*/${CRON_BACKGROUND_TIME} * * * *`, async () => {
     try {
       console.log(
         `Checking for new records in ${repoKey} since ${prsentDate}...`
