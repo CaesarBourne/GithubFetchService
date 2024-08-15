@@ -180,7 +180,7 @@ export const fetchCommitsAndSaveInDB = async (
       await commitRepositoryFromEntity.save(commitEntities);
 
       // Update the latest SHA to the last commit in this batch
-      latestSha = commitsData[commitsData.length - 30].sha;
+      latestSha = commitsData[commitsData.length - 30]?.sha;
 
       page++;
     }
