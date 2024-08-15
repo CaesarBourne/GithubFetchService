@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   CHROMIUM_OWNER,
   CHROMIUM_REPO,
+  CRON_BACKGROUND_TIME,
   GIT_TOKEN,
   GITHUB_BASE_URL,
 } from "../lib/constant";
@@ -32,7 +33,7 @@ export const getRepositoryData = async (
 //start time from 30 minutes ago
 const getStartDateFrom10MinutesAgo = (): string => {
   const now = new Date();
-  now.setMinutes(now.getMinutes() - 1);
+  now.setMinutes(now.getMinutes() - CRON_BACKGROUND_TIME);
   return now.toISOString();
 };
 // Get commits data from GitHub
@@ -180,7 +181,7 @@ export const fetchCommitsAndSaveInDB = async (
       await commitRepositoryFromEntity.save(commitEntities);
 
       // Update the latest SHA to the last commit in this batch
-      latestSha = commitsData[commitsData.length - 30]?.sha;
+      latestSha = commitsData[commitsData.length - 1].sha;
 
       page++;
     }
