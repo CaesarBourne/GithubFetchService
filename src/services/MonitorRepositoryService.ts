@@ -29,7 +29,7 @@ export const initiateMonitoring = async (
     return { success: false, message };
   }
 
-  // Schedule the cron job to run every 30 minutes
+  // Schedule the cron job to run every 59 minutes
   const job = cron.schedule("*/59 * * * *", async () => {
     try {
       console.log(`Fetching data for ${repoKey}...`);
@@ -87,8 +87,8 @@ export const initiateNewRecordsCheck = async (owner: string, repo: string) => {
     return { success: false, message };
   }
   let prsentDate = new Date().toISOString();
-  // Schedule the cron job to run every 30 minutes
-  const job = cron.schedule("*/30 * * * *", async () => {
+  // Schedule the cron job to run every 10 minutes
+  const job = cron.schedule("*/10 * * * *", async () => {
     try {
       console.log(
         `Checking for new records in ${repoKey} since ${prsentDate}...`
