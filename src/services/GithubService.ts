@@ -188,6 +188,8 @@ export const fetchCommitsAndSaveInDB = async (
 
     if (latestSha) {
       // Update the lastCommitSha in the repository
+      cdrlogger.info(`${latestSha}|${repoName}|${repoOwner}`);
+
       repository.lastCommitSha = latestSha;
       await githubServiceRepository.save(repository);
     }
