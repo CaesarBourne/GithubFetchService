@@ -45,12 +45,4 @@ describe("initiateMonitoring", () => {
       `A monitoring job is already running for ${owner}/${repository}.`
     );
   });
-
-      // Expect the second attempt to fail because the job is already running
-      expect(result).toBeDefined();
-      expect(result.success).toBe(false);
-      expect(result.message).toBe(
-        `A monitoring job is already running for ${owner}/${repository}.`
-      );
-    });
 });
