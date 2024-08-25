@@ -27,6 +27,32 @@ describe("initiateMonitoring", () => {
     );
   });
 
+  it("should return an error for an invalid repository name", async () => {
+    const owner = "CaesarBourne";
+    const repository = "InvalidRepositoryName";
+    const startDate = "2024-03-01T00:00:00Z";
+
+    const result = await initiateMonitoring(owner, repository, startDate);
+
+    expect(result).toBeDefined();
+    expect(result.success).toBe(false);
+    expect(result.message).toBe(
+      `Repository ${owner}/${repository} does not exist.`
+    );
+  });
+
+  it("should return an error for an invalid start date", async () => {
+    const owner = "CaesarBourne";
+    const repository = "GithubFetchService";
+    const startDate = "invalid-date-format";
+
+    const result = await initiateMonitoring(owner, repository, startDate);
+
+    expect(result).toBeDefined();
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("Invalid start date provided.");
+  });
+
   it("should not start monitoring if a job is already running", async () => {
     const owner = "CaesarBourne";
     const repository = "GithubFetchService";
